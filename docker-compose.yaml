@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "restaurant"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "strong_password"
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python restaurant/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=restaurant
+      - DB_USER=admin
+      - DB_PASSWORD=strong_password
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
